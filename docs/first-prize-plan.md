@@ -1,43 +1,56 @@
-# First-Prize Plan
+# Portico Submission Frame
 
 ## Product Positioning
 
-DotCheckout is not a DeFi protocol. It is merchant infrastructure for the Polkadot economy.
+Portico is not a DeFi dashboard.
 
-The framing should always be:
+It is a supplier-settlement protocol for Polkadot Hub:
 
-- buyers start with any supported parachain asset
-- merchants receive the asset they actually want
-- Polkadot Hub is the settlement layer because XCM and native assets are built in
+- buyers pay with a supported asset
+- suppliers settle in the asset they invoiced in
+- a desk handles the route behind the scenes
 
-## What Judges Need To See
+## Core Wedge
 
-- A real merchant pain point, not a crypto-native toy.
-- A working checkout contract with security boundaries.
-- A reason this belongs on Polkadot Hub specifically.
-- A roadmap from MVP to ecosystem-wide infrastructure.
+Most payment demos show value moving between wallets.
+
+Portico shows a supplier invoice closing as settled.
+
+Repeat this line:
+
+**Others move value. Portico closes supplier invoices.**
+
+## What Judges Need To Remember
+
+- this solves a real B2B settlement pain point
+- the product moment is obvious in one run
+- Polkadot Hub matters because the asset rails and expansion path are native
+- the UI feels like a product, not just infrastructure
 
 ## Demo Priorities
 
-1. Create a checkout request for `100 USDC`.
-2. Show a buyer paying with `USDT`.
-3. Show the route engine quote already signed.
-4. Execute the buyer payment.
-5. Execute the solver fill.
-6. Show the merchant receiving exactly `100 USDC`.
-7. End with the XCM dispatcher and explain how this becomes cross-parachain settlement.
+1. Show invoice `INV-1042` for `100 USDC`
+2. Show buyer funding it with `USDT`
+3. Submit the buyer pay-in
+4. Settle from the desk wallet
+5. End on the supplier receiving exact output
 
-## What To Avoid Saying
+## Best Contrast Lines
 
-- "It's like another DEX."
-- "We'll add product-market fit later."
-- "AI will optimize everything."
-- "This is just a payment gateway."
+- "This is not a transfer demo. It is a supplier invoice settlement product."
+- "The buyer pays with what they hold. The supplier settles in what they invoiced."
+- "The business outcome is not tokens moved. The business outcome is invoice settled."
+- "Portico packages Polkadot's asset complexity into a workflow a finance team can understand."
+
+## What To Avoid
+
+- "It's basically another payment app."
+- "It's just a swap wrapped in a UI."
+- "The route engine is the main innovation."
+- "We will find a user later."
 
 ## What To Say Instead
 
-- "We remove asset friction from commerce on Polkadot."
-- "Merchants should not care which asset the customer starts with."
-- "Polkadot Hub gives us a native settlement surface plus an upgrade path to XCM execution."
-- "The EVM contract handles payment guarantees while the routing layer can evolve independently."
-
+- "Suppliers should not manage conversion risk at the moment of collection."
+- "Portico gives suppliers exact settlement while keeping buyer-side flexibility."
+- "Polkadot Hub gives us a natural settlement surface today and XCM expansion tomorrow."

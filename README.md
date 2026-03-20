@@ -1,49 +1,53 @@
-# DotCheckout
+# Portico
 
-DotCheckout is a Polkadot Hub checkout rail that lets merchants accept one supported asset and settle in another. The MVP is designed for the Polkadot Solidity Hackathon and optimized for a first-prize style demo: one clean merchant flow, one real contract, and a story that only makes sense on Polkadot.
+Portico is an APAC supplier-settlement protocol on Polkadot Hub.
 
-## Why This Has A Shot At First Prize
+The product story is simple:
 
-- It is not another lending market, stablecoin, or AI wrapper.
-- The product value is obvious in one sentence: pay with one asset, settle in another.
-- It uses Polkadot Hub's edge: foreign assets, ERC20 precompiles, and a path to XCM-backed settlement.
-- The demo can be shown in under two minutes.
-- The architecture naturally extends into a hybrid `EVM + PVM` story.
+- a supplier invoices in `100 USDC`
+- a buyer pays with `USDT`
+- a settlement desk completes the route
+- the supplier still receives exactly `100 USDC`
 
-## MVP Flow
+Portico is the product brand. The on-chain settlement engine in this repo is still [`contracts/DotCheckout.sol`](C:\Users\ASHWIN GOYAL\OneDrive\Desktop\polkadot\contracts\DotCheckout.sol), because we kept the working contract flow and pivoted the product into a stronger B2B narrative.
 
-1. A merchant creates a checkout request with a preferred settlement asset and amount.
-2. A route engine signs an off-chain quote for a payer's chosen input asset.
-3. The payer submits the quote and pays with the quoted asset.
-4. If the payer used the merchant's preferred asset, the checkout settles instantly.
-5. If the payer used a different supported asset, a solver finalizes settlement and receives the payer's asset in return.
+## Why Portico Exists
 
-This "solver fill" flow is deliberate. It keeps the contract simple and demoable while still matching how real routing systems work.
+Cross-border suppliers should not need to:
 
-## What Is In This Repo
+- reject buyers because they hold the wrong asset
+- manage FX and conversion risk at the moment of payment
+- turn invoice collection into a manual swap workflow
 
-- `contracts/DotCheckout.sol`: checkout contract with quote verification, direct settlement, solver settlement, and refunds.
-- `contracts/XcmDispatcher.sol`: wrapper around the Polkadot Hub XCM precompile so the project can tell a credible hybrid story.
-- `contracts/mock/MockERC20.sol`: local testing asset.
-- `scripts/deploy.js`: deploys the contracts.
-- `scripts/signQuote.js`: signs a checkout quote for the frontend or demo script.
-- `test/DotCheckout.js`: core happy-path and refund tests.
-- `index.html` + `src/*`: a lightweight frontend shell for the pitch and demo.
-- `docs/`: pitch assets for judges.
+Portico fixes that by turning Polkadot Hub into a supplier settlement surface. Buyers pay with a supported asset. Suppliers still settle in the stablecoin they invoiced in.
 
-## Polkadot-Specific Notes
+## What Makes This Different
 
-- Polkadot Hub TestNet RPC: `https://services.polkadothub-rpc.com/testnet`
-- Polkadot Hub TestNet chain ID: `420420417`
-- The ERC20 precompile lets contracts treat registered assets like standard ERC20 tokens.
-- The XCM precompile lives at `0x00000000000000000000000000000000000a0000`
+- This is not a wallet-to-wallet transfer demo. It starts with a supplier invoice and ends with an invoice marked settled.
+- This is not a DEX front end. Routing stays behind the scenes in a signed quote and a desk settlement step.
+- This is not a generic payment gateway. The value is exact supplier settlement, not just token movement.
+- This is legible in seconds: buyer pays `USDT`, supplier receives `100 USDC`, invoice closes.
 
-These details are based on the official Polkadot Developer Docs:
+## What Is Live In This MVP
 
-- [Connect to Polkadot](https://docs.polkadot.com/develop/networks)
-- [ERC20 Precompile](https://docs.polkadot.com/smart-contracts/precompiles/erc20/)
-- [XCM Precompile](https://docs.polkadot.com/smart-contracts/precompiles/xcm/)
-- [Use Hardhat with Polkadot Hub](https://docs.polkadot.com/develop/smart-contracts/dev-environments/hardhat)
+1. A supplier settlement request is created on-chain.
+2. A quote signer signs an off-chain exact-settlement quote.
+3. The buyer submits the pay-in against that quote.
+4. If the buyer used the supplier asset, settlement can be direct.
+5. If the buyer used another supported asset, the desk settles the supplier output.
+6. If settlement misses the deadline, a refund path exists.
+
+## Repo Map
+
+- `contracts/DotCheckout.sol`: exact-settlement engine with quote verification, direct settlement, desk settlement, and refunds
+- `contracts/XcmDispatcher.sol`: XCM precompile wrapper for the Polkadot-native expansion story
+- `contracts/mock/MockERC20.sol`: local mock assets
+- `scripts/deploy.js`: deploys contracts, mints demo assets, creates invoice `#1`, and writes demo config
+- `scripts/signQuote.js`: signs or refreshes the live settlement quote
+- `src/main.js`: Portico product UI
+- `src/style.css`: Portico visual system
+- `docs/demo-script.md`: live and recorded demo script
+- `docs/first-prize-plan.md`: submission framing
 
 ## Quick Start
 
@@ -54,20 +58,18 @@ npm run test
 npm run dev
 ```
 
-## Where The Keys Come From
+## Demo Roles
 
-You create these yourself. They are not issued by Polkadot.
+- `PRIVATE_KEY`: operator wallet used for deploy
+- `QUOTE_SIGNER_PRIVATE_KEY`: quote signer for the off-chain settlement quote
+- `DEMO_PAYER_ADDRESS`: buyer wallet that submits the pay-in
+- `DEMO_SOLVER_ADDRESS`: desk wallet that settles the invoice
 
-- `PRIVATE_KEY`: export the private key of a throwaway MetaMask testnet wallet that will deploy the contracts.
-- `QUOTE_SIGNER_PRIVATE_KEY`: export the private key of a second throwaway wallet that signs checkout quotes.
-
-For hackathon speed, you can reuse the same wallet for both values, but two wallets looks cleaner in the demo.
-
-Use only fresh testnet wallets here. Never paste a mainnet wallet private key into this repo.
+Use fresh testnet wallets only.
 
 ## Deploy To Polkadot Hub TestNet
 
-1. Create your env file:
+1. Create the env file:
 
 ```bash
 copy .env.example .env
@@ -75,78 +77,63 @@ copy .env.example .env
 
 2. Fill in:
 
-- `PRIVATE_KEY`: deployer wallet private key
-- `QUOTE_SIGNER_PRIVATE_KEY`: signer used for EIP-712 checkout quotes
-- `POLKADOT_HUB_RPC_URL`: keep `https://services.polkadothub-rpc.com/testnet` unless you have another endpoint
-- `DEMO_PAYER_ADDRESS`: wallet that will submit `payWithQuote`
-- `DEMO_SOLVER_ADDRESS`: wallet that will call `fillPayment`
+- `PRIVATE_KEY`
+- `QUOTE_SIGNER_PRIVATE_KEY`
+- `DEMO_PAYER_ADDRESS`
+- `DEMO_SOLVER_ADDRESS`
+- `POLKADOT_HUB_RPC_URL=https://services.polkadothub-rpc.com/testnet`
 
-3. Fund the deployer wallet with testnet `PAS`.
+3. Fund the operator wallet with `PAS`.
 
-4. Compile and test locally:
+4. Run:
 
 ```bash
 npm run compile
 npm run test
-```
-
-5. Deploy:
-
-```bash
 npm run deploy:hub
 ```
 
-This now does all of this in one run:
+That deployment flow:
 
-- `DotCheckout` contract address
-- `XcmDispatcher` contract address
-- mock `USDT` and `USDC` addresses
-- creates checkout `#1`
-- mints demo assets to the configured payer and solver wallets
-- generates a signed demo quote
-- writes `docs/demo-config.latest.json`
-- prints the same config JSON for the frontend
+- deploys the settlement engine and XCM dispatcher
+- deploys mock `USDT` and `USDC`
+- creates invoice `#1`
+- mints demo assets to the buyer and desk wallets
+- generates a signed quote
+- writes [`docs/demo-config.latest.json`](C:\Users\ASHWIN GOYAL\OneDrive\Desktop\polkadot\docs\demo-config.latest.json)
 
-6. Open the app and run:
+5. Open the app, go to `Treasury Desk`, and apply the config.
 
-- open the `Deploy Guide` tab
-- paste the printed JSON or the contents of `docs/demo-config.latest.json`
-- click `Apply Demo Config`
-- switch MetaMask to Polkadot Hub TestNet
-- connect the payer wallet and click `Approve Input Asset`
-- submit the payment
-- connect the solver wallet and click `Approve Settlement Asset`
-- fill the payment
+6. Live run:
 
-7. For MetaMask network setup, use:
+- connect buyer wallet
+- click `Approve Buyer Asset`
+- click `Submit Buyer Pay-In`
+- switch to desk wallet
+- click `Approve Desk Asset`
+- click `Settle Invoice`
 
-- Network name: `Polkadot Hub TestNet`
-- RPC URL: `https://services.polkadothub-rpc.com/testnet`
+## Polkadot-Specific Edge
+
+- Hub TestNet RPC: `https://services.polkadothub-rpc.com/testnet`
 - Chain ID: `420420417`
-- Currency symbol: `PAS`
+- Native asset: `PAS`
+- ERC20 precompiles let Hub assets behave like standard ERC20 rails
+- XCM precompile gives Portico a credible path to cross-parachain settlement
 
-If you need to refresh the quote later, you can still run:
+Official references:
 
-```bash
-node scripts/signQuote.js --config docs/demo-config.latest.json
-```
+- [Connect to Polkadot](https://docs.polkadot.com/develop/networks)
+- [ERC20 Precompile](https://docs.polkadot.com/smart-contracts/precompiles/erc20/)
+- [XCM Precompile](https://docs.polkadot.com/smart-contracts/precompiles/xcm/)
+- [Use Hardhat with Polkadot Hub](https://docs.polkadot.com/develop/smart-contracts/dev-environments/hardhat)
 
-## First-Prize Positioning
+## The Submission Frame
 
-DotCheckout should be pitched as payment infrastructure, not DeFi.
+Use this line:
 
-The story for judges is:
+**Others move value. Portico closes supplier invoices.**
 
-- Merchants should not care which parachain asset the user starts with.
-- Polkadot Hub is the right settlement surface because assets can land there natively and interoperate through XCM.
-- A hybrid version uses EVM for merchant UX and settlement guarantees, while a PVM quote engine or XCM builder finds routes and prepares encoded cross-chain messages.
+And this one:
 
-## Suggested Demo
-
-1. Create a checkout for `100 USDT`.
-2. Show the buyer choosing a different supported asset.
-3. Submit a signed quote from the route engine.
-4. Trigger the payment.
-5. Fill the payment from the solver account.
-6. Show the merchant receiving exactly `100 USDT`.
-7. Close with the XCM dispatcher as the bridge from local checkout logic to cross-chain execution.
+**Buyers pay with what they hold. Suppliers settle in what they invoice.**

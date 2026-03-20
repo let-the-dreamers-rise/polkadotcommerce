@@ -53,8 +53,8 @@ async function main() {
   const settlementAmount = getEnvBigInt("DEMO_SETTLEMENT_AMOUNT", 100_000000n);
   const inputAmount = getEnvBigInt("DEMO_INPUT_AMOUNT", 105_000000n);
   const checkoutLifetime = getEnvNumber("DEMO_CHECKOUT_LIFETIME_SECONDS", 60 * 60 * 24 * 7);
-  const quoteLifetime = getEnvNumber("DEMO_QUOTE_LIFETIME_SECONDS", 60 * 15);
-  const fillLifetime = getEnvNumber("DEMO_FILL_LIFETIME_SECONDS", 60 * 60);
+  const quoteLifetime = getEnvNumber("DEMO_QUOTE_LIFETIME_SECONDS", 60 * 60 * 24);
+  const fillLifetime = getEnvNumber("DEMO_FILL_LIFETIME_SECONDS", 60 * 60 * 48);
   const payerAddress = process.env.DEMO_PAYER_ADDRESS || deployer.address;
   const solverAddress = process.env.DEMO_SOLVER_ADDRESS || deployer.address;
   const checkoutRef = process.env.DEMO_CHECKOUT_REF || `dotcheckout-${Date.now()}`;

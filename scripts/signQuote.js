@@ -44,6 +44,17 @@ async function main() {
 
   const wallet = new ethers.Wallet(privateKey, new ethers.JsonRpcProvider(rpcUrl));
   const sourceQuote = config?.quote || {};
+  const now = Math.floor(Date.now() / 1000);
+  const quoteLifetime = Number(getArg("quote-lifetime", process.env.DEMO_QUOTE_LIFETIME_SECONDS || "86400"));
+  const fillLifetime = Number(getArg("fill-lifetime", process.env.DEMO_FILL_LIFETIME_SECONDS || "172800"));
+  const sourceQuoteExpiry = Number(sourceQuote.quoteExpiry || 0);
+  const sourceFillDeadline = Number(sourceQuote.fillDeadline || 0);
+  const defaultQuoteExpiry =
+    sourceQuoteExpiry > now + 60 ? sourceQuoteExpiry : now + quoteLifetime;
+  const defaultFillDeadline =
+    sourceFillDeadline > defaultQuoteExpiry + 60
+      ? sourceFillDeadline
+      : Math.max(defaultQuoteExpiry + 60, now + fillLifetime);
 
   if (
     config?.demoActors?.quoteSigner &&
@@ -61,12 +72,8 @@ async function main() {
     settlementAsset: getArg("settlement-asset", sourceQuote.settlementAsset || ethers.ZeroAddress),
     settlementAmount: BigInt(getArg("settlement-amount", sourceQuote.settlementAmount || "100000000")),
     solver: getArg("solver", sourceQuote.solver || ethers.ZeroAddress),
-    quoteExpiry: BigInt(
-      getArg("quote-expiry", sourceQuote.quoteExpiry || `${Math.floor(Date.now() / 1000) + 900}`)
-    ),
-    fillDeadline: BigInt(
-      getArg("fill-deadline", sourceQuote.fillDeadline || `${Math.floor(Date.now() / 1000) + 3600}`)
-    ),
+    quoteExpiry: BigInt(getArg("quote-expiry", `${defaultQuoteExpiry}`)),
+    fillDeadline: BigInt(getArg("fill-deadline", `${defaultFillDeadline}`)),
     salt: getArg("salt", sourceQuote.salt || ethers.hexlify(ethers.randomBytes(32)))
   };
 

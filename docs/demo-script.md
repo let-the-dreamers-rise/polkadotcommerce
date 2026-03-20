@@ -1,182 +1,213 @@
-# DotCheckout Demo Script
+# Portico Demo Script
 
-## What Judges Need To Feel
+## One-Line Pitch
 
-Judges for the Polkadot Solidity Hackathon are explicitly scoring on:
+**"Portico lets buyers pay with what they hold while suppliers settle in exactly what they invoiced."**
 
-- technical implementation
-- use of Polkadot Hub features
-- innovation and impact
-- UX and adoption potential
-- team execution and presentation
+## 75-Second Final Script
 
-This demo is built to hit all five in under three minutes.
+Use this if you only want one script for both submission and rehearsal.
 
-## The Big Idea
+### 0:00 - 0:12
 
-One sentence:
+**"This is Portico, a supplier settlement protocol on Polkadot Hub. Buyers pay with the asset they already hold, while suppliers still settle in exactly what they invoiced."**
 
-"DotCheckout lets a buyer pay with the asset they hold while the merchant receives the exact asset and amount they asked for on Polkadot Hub."
+### 0:12 - 0:25
 
-One contrast line:
+Show `Supplier Desk`.
 
-"Most crypto payments make the merchant absorb route complexity. DotCheckout hides that complexity and guarantees exact output."
+**"Here, Monsoon Components issued invoice `INV-1042` for exactly `100 USDC`. The supplier does not care what asset the buyer starts with. They care about settling in the stablecoin they priced in."**
 
-## Demo Setup
+### 0:25 - 0:43
 
-Have these ready before you go live:
+Show `Buyer Pay-In`.
 
-- app open on the `Deploy Guide` tab
-- `docs/demo-config.latest.json` available
-- payer wallet funded and connected to Polkadot Hub TestNet
-- solver wallet funded and connected to Polkadot Hub TestNet
-- fallback screenshot or screen recording in case RPC latency spikes
+**"The buyer does not hold USDC, so they fund the invoice with `105 USDT` instead. Portico captures that buyer pay-in against a signed quote on Polkadot Hub."**
 
-## 150-Second Live Script
+### 0:43 - 0:58
 
-### 0:00 - 0:20
+Switch to the desk wallet and settle.
+
+**"Then the settlement desk completes the exact-output leg, so the supplier treasury never has to manage conversion complexity during collection."**
+
+### 0:58 - 1:15
+
+Show the paid state.
+
+**"The buyer paid with USDT. The supplier still received exactly `100 USDC`. That is the difference between Portico and a simple transfer. Others move value. Portico closes supplier invoices."**
+
+## Win Condition
+
+By the first 20 seconds, judges should understand:
+
+- this is a supplier invoice product, not a transfer toy
+- the buyer funds the invoice with a different asset
+- the supplier still receives exact stable settlement
+
+## Clean Demo Order
+
+1. `Overview`
+2. `Supplier Desk`
+3. `Buyer Pay-In`
+4. done
+
+Do not wander into `Treasury Desk` during the main pitch.
+
+## 130-Second Live Script
+
+### 0:00 - 0:15
 
 Say:
 
-"We built DotCheckout because merchants should not have to care which asset the customer starts with. They should simply ask for exact settlement, and Polkadot Hub should handle the rest."
+**"Cross-border suppliers should not have to reject buyers for holding the wrong asset, and they should not manage FX risk at the moment of payment. Portico fixes that."**
+
+Then:
+
+**"The buyer pays with what they hold. The supplier settles in what they invoiced."**
+
+### 0:15 - 0:40
+
+Open `Supplier Desk`.
+
+Say:
+
+**"Here is the business moment. Monsoon Components issued invoice `INV-1042` for exactly `100 USDC`."**
+
+Point at:
+
+- invoice total
+- buyer remits amount
+- accepted rails
+- supplier target
+
+Then say:
+
+**"The supplier experience is simple: price once in the stablecoin you want, and receive exactly that amount when the invoice settles."**
+
+### 0:40 - 1:05
+
+Open `Buyer Pay-In`.
+
+Connect the buyer wallet if needed.
 
 Click:
 
-- open the app hero
-- switch to `Merchant Console`
-
-### 0:20 - 0:45
+- `Approve Buyer Asset`
+- `Submit Buyer Pay-In`
 
 Say:
 
-"Here the merchant asks for exactly 100 USDC. The buyer can come in with PAS or USDT, but the merchant still receives the exact target output."
+**"The buyer does not need to source the supplier's settlement asset first. They can fund the invoice with the asset they already hold."**
 
-Show:
+Then:
 
-- the merchant target card
-- supported rails
-- the loaded checkout
+**"Portico captures the buyer pay-in against a signed quote and moves the invoice into settlement."**
+
+### 1:05 - 1:30
+
+Switch to the desk wallet.
+
+Click:
+
+- `Approve Desk Asset`
+- `Settle Invoice`
+
+Say:
+
+**"Now the settlement desk completes the exact-output leg. This is where the complexity lives, not in the supplier treasury workflow."**
+
+Point at:
+
+- role cards
+- route preview
+- settlement or paid state
+
+### 1:30 - 1:50
 
 Land this line:
 
-"This is not a swap UI. It is a commerce product with an exact-settlement guarantee."
+**"The buyer paid with USDT. The supplier still settled in exactly 100 USDC."**
 
-### 0:45 - 1:15
+Then:
 
-Say:
+**"That is the difference between Portico and a simple transfer. A transfer moves tokens. Portico closes supplier invoices with exact settlement."**
 
-"Now I’ll load the real deployed config from Polkadot Hub TestNet. This includes the contract, checkout, assets, and a signed route quote."
+### 1:50 - 2:10
 
-Click:
+Close with Polkadot:
 
-- `Deploy Guide`
-- paste `docs/demo-config.latest.json`
-- click `Apply Demo Config`
+**"Portico belongs on Polkadot Hub because Hub gives us Solidity, asset-aware settlement rails, ERC20 precompiles, and a real path to XCM expansion."**
 
-Narrate:
+Final line:
 
-"The deploy flow already created checkout number one, minted demo assets, and generated a signed EIP-712 quote."
+**"Others move value. Portico closes supplier invoices."**
 
-### 1:15 - 1:45
+## 60-Second Submission Video
 
-Say:
+### 0:00 - 0:10
 
-"The buyer is paying with USDT, while the merchant wants USDC. The quote is signed off-chain, but settlement guarantees are enforced on-chain."
+**"This is Portico, a supplier settlement protocol on Polkadot Hub."**
 
-Click:
+### 0:10 - 0:20
 
-- `Route Lab`
-- connect payer wallet
-- click `Approve Input Asset`
-- click `Submit Payment`
+Show `Supplier Desk`.
 
-Call out:
+**"The supplier issued invoice `INV-1042` for exactly `100 USDC`."**
 
-"At this point the payment is accepted, but final settlement still requires the solver to deliver the merchant’s exact output."
+### 0:20 - 0:35
 
-### 1:45 - 2:15
+Show `Buyer Pay-In`.
 
-Say:
+**"The buyer does not hold USDC. They fund the invoice with `105 USDT` instead."**
 
-"Now the solver completes settlement. The merchant gets 100 USDC, and the solver receives the buyer’s input asset. This is how we separate merchant UX from route execution."
+### 0:35 - 0:50
 
-Click:
+Show buyer pay-in and desk settlement.
 
-- switch wallet to solver
-- click `Approve Settlement Asset`
-- click `Fill Payment #1`
+**"Portico captures the buyer pay-in, then the desk completes exact settlement."**
 
-Then point at:
+### 0:50 - 1:00
 
-- merchant output
-- ops log
-- quote preview
+Show final success state.
 
-Say:
+**"The supplier still receives exactly `100 USDC`. That is Portico."**
 
-"That is exact-output settlement on Polkadot Hub."
+## Exact Click Map
 
-### 2:15 - 2:45
+1. Start on `Overview`
+2. Say the one-line pitch
+3. Open `Supplier Desk`
+4. Point to invoice `INV-1042`
+5. Open `Buyer Pay-In`
+6. Connect buyer wallet
+7. Click `Approve Buyer Asset`
+8. Click `Submit Buyer Pay-In`
+9. Switch to desk wallet
+10. Click `Approve Desk Asset`
+11. Click `Settle Invoice`
+12. End on the paid invoice state
 
-Say:
+## If Judges Interrupt
 
-"Why Polkadot? Because assets, precompiles, and cross-chain execution are native here. Today this MVP proves same-chain exact settlement. Next, the same merchant UX expands to XCM-backed settlement across parachains."
+### "How is this different from just sending money?"
 
-Point to:
+**"A transfer moves a token. Portico closes a supplier invoice with exact settlement in the supplier's preferred asset, even when the buyer starts with a different asset."**
 
-- `Settlement Edge`
-- `XcmDispatcher`
+### "Why is the desk involved?"
 
-Close with:
+**"Because the supplier treasury should stay simple. Portico pushes routing and settlement complexity into a modular desk flow so the supplier still gets exact output."**
 
-"We are not another lending fork or AI wrapper. We are payment infrastructure that feels native to Polkadot."
+### "Why Polkadot Hub?"
 
-## 60-Second Video Version
+**"Because Hub gives us the right settlement surface: Solidity support, native asset rails, ERC20 precompiles, and an XCM path as the asset graph expands."**
 
-If you need the tight recorded version:
+## Do Not Say
 
-1. Open on the hero and say the one-line pitch.
-2. Show merchant wants `100 USDC`.
-3. Paste deploy config and apply it.
-4. Show the quote: buyer pays `105 USDT`, merchant gets `100 USDC`.
-5. Approve input asset and submit payment.
-6. Switch to solver, approve settlement asset, fill payment.
-7. End on exact merchant settlement and the XCM expansion line.
+- "It's basically a transfer app"
+- "It's just another payment gateway"
+- "The routing is the product"
+- "We'll figure out the business case later"
 
-## What To Say If Judges Ask "Why Is This Special?"
+## Best Closing Sentence
 
-"Because we are packaging Polkadot Hub's native strengths into a product users actually understand. We use Solidity contracts for guarantees, signed quotes for routing, ERC20-style asset handling for Hub assets, and an XCM path for cross-chain settlement."
-
-## What To Say If Judges Ask "Will Judges Need To Use It Themselves?"
-
-No. The safest primary path is:
-
-- you present it live on Demo Day
-- you submit a 1 to 3 minute demo video
-- you include the open-source repo
-- you include a short setup note in the README
-
-Judges usually evaluate the product through your presentation and video first. If they try it later, give them a single happy path, not a sandbox of options.
-
-## Demo-Day Rules For Ourselves
-
-- never start with contracts
-- never start with architecture
-- never make the judge read JSON first
-- open with merchant value
-- show one clean payment
-- end with Polkadot-native expansion
-
-## Backup Plan If Something Breaks
-
-If RPC is slow or a wallet pop-up stalls:
-
-- show the already-loaded config
-- show the signed quote
-- show the contract addresses
-- narrate the exact settlement path
-- fall back to a recorded 60-second successful run
-
-The backup line:
-
-"The product logic is deployed live on Polkadot Hub TestNet. To protect the demo flow from wallet and RPC latency, I also prepared a recorded execution of the same path."
+**"Portico turns cross-asset treasury complexity into a simple supplier invoice flow: buyers pay with what they hold, and suppliers settle in what they invoice."**
