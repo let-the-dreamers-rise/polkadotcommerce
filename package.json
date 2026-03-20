@@ -1,0 +1,30 @@
+{
+  "name": "dotcheckout",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-asset checkout and instant settlement starter for Polkadot Hub",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:hub": "hardhat run scripts/deploy.js --network polkadotHubTestnet",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.6",
+    "ethers": "^6.15.0",
+    "viem": "^2.43.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
+    "@nomicfoundation/hardhat-ethers": "^3.1.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.1.0",
+    "chai": "^4.5.0",
+    "dotenv": "^17.2.2",
+    "hardhat": "^2.26.0",
+    "vite": "^8.0.0"
+  }
+}
